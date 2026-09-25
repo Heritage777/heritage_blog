@@ -45,7 +45,7 @@
                 </div>
 
                 <button type="submit" class="btn-submit">
-                    <span>Create Account</span>
+                    <span class="button-text">Create Account</span>
                     <span class="arrow">&rarr;</span>
                 </button>
 
@@ -66,38 +66,58 @@
     const passwordConfirmError = document.querySelector('.passwordConfirm.error')
     const usernameError = document.querySelector('.username.error')
 
+    const submitButton = form.querySelector('button[type="submit"]')
+    const buttonText = submitButton.querySelector('.button-text')
+    const arrow = submitButton.querySelector('.arrow')
+
     form.addEventListener('submit', async (e) => {
-    e.preventDefault()
-    emailError.textContent = ''
-    passwordError.textContent = ''
-    passwordConfirmError.textContent = ''
+        e.preventDefault()
+        emailError.textContent = ''
+        passwordError.textContent = ''
+        passwordConfirmError.textContent = ''
 
-    const email = form.email.value
-    const password = form.password.value
-    const passwordConfirm = form.passwordConfirm.value
-    const username = form.username.value
+        // Loading state
+        submitButton.disabled = true
+        buttonText.textContent = 'Creating account...'
+        arrow.style.display = 'none'
 
-    try {
-        const result = await fetch('/signup', {
-            method: 'POST',
-            body: JSON.stringify({ username, email, password, passwordConfirm }),
-            headers: { 'Content-Type': 'application/json'}
-        })
-        const data = await result.json()
-        console.log(data)
+        const email = form.email.value
+        const password = form.password.value
+        const passwordConfirm = form.passwordConfirm.value
+        const username = form.username.value
 
-        if (data.errors) {
-            emailError.textContent = data.errors.email || ''
-            passwordError.textContent = data.errors.password || ''
-            passwordConfirmError.textContent = data.errors.passwordConfirm || ''
+        try {
+            const result = await fetch('/signup', {
+                method: 'POST',
+                body: JSON.stringify({ username, email, password, passwordConfirm }),
+                headers: { 'Content-Type': 'application/json'}
+            })
+            const data = await result.json()
+            console.log(data)
+
+            if (data.errors) {
+                emailError.textContent = data.errors.email || ''
+                passwordError.textContent = data.errors.password || ''
+                passwordConfirmError.textContent = data.errors.passwordConfirm || ''
+            }
+
+            if (data.success) {
+                location.assign(data.redirect)
+                return
+            }
+
+            // Restore button if signup fails
+            submitButton.disabled = false
+            buttonText.textContent = 'Create Account'
+            arrow.style.display = ''
+
+        } catch (error) {
+            console.log(error)
+
+            // Restore button if request fails
+            submitButton.disabled = false
+            buttonText.textContent = 'Create Account'
+            arrow.style.display = ''
         }
-
-        if (data.success) {
-            location.assign(data.redirect)
-        }
-
-    } catch (error) {
-        console.log(error)
-    }
-})
+    })
 </script>
