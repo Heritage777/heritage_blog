@@ -1,0 +1,38 @@
+<nav class="navbar">
+    <div class="container nav-container">
+        <a class="brand-logo" href="/">Heritage_Blog</a>
+
+        <!-- Hamburger Menu Toggle Button for Mobile -->
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+
+        <div class="nav-links" id="navLinks">
+            <% if (user) { %>
+                <a href="/blogs">Home</a>
+                <a href="/create">New Post</a>
+                <a href="/about">About</a>
+                <a href="/profile">Profile</a>
+                <a href="/logout">Logout</a>
+            <% } else { %>
+                <a href="/blogs">Home</a>
+                <a href="/about">About</a>
+                <a href="/login">Login</a>
+                <a href="/signup">Sign Up</a>
+            <% } %>
+        </div>
+    </div>
+</nav>
+
+<!-- Simple JavaScript to toggle the mobile slide-down menu -->
+<script>
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    navToggle.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        navToggle.classList.toggle('open');
+    });
+</script>

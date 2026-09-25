@@ -1,0 +1,68 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+
+<div class="container profile-page-container">
+
+    <h1>My Profile</h1>
+
+    <p>Username: <%= user.username %></p>
+    <p>Email: <%= user.email %></p>
+
+    <h2>Profile Picture</h2>
+
+    <% if (user.profilePicture && user.profilePicture.url) { %>
+
+        <img
+            src="<%= user.profilePicture.url %>"
+            alt="Profile picture"
+            width="150"
+        >
+
+        <br><br>
+
+        <form action="/profile/delete" method="POST">
+            <button type="submit">Delete Picture</button>
+        </form>
+
+    <% } else { %>
+
+        <img
+            src="https://i.pinimg.com/736x/e6/31/f1/e631f170b5dfc882ed2845b521653ecb.jpg"
+            alt="Default profile picture"
+            width="150"
+        >
+
+    <% } %>
+
+    <h3>
+        <%= user.profilePicture && user.profilePicture.url
+            ? 'Change Profile Picture'
+            : 'Upload Profile Picture'
+        %>
+    </h3>
+
+    <form
+        action="/profile/upload"
+        method="POST"
+        enctype="multipart/form-data"
+    >
+
+        <input
+            type="file"
+            name="image"
+            accept=".jpg,.jpeg,.png"
+            required
+        >
+
+        <button type="submit">
+            <%= user.profilePicture && user.profilePicture.url
+                ? 'Change Picture'
+                : 'Upload Picture'
+            %>
+        </button>
+
+    </form>
+
+</div>
+
+<%- include('partials/footer') %>

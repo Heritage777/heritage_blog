@@ -1,0 +1,232 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+
+<div class="container">
+    <div class="verify-container">
+        <h1>Verify Your Email</h1>
+        <p>Enter the 6-digit OTP sent to your email.</p>
+
+        <form>
+            <!-- Email -->
+            <input class="verify-email-input" type="email" name="email" placeholder="Enter your email" required>
+
+            <!-- OTP -->
+            <div class="otp-container">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" required>
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" required>
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" required>
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" required>
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" required>
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" required>
+            </div>
+
+            <!-- Verify -->
+            <button class="verify-btn" type="submit">Verify Email</button>
+
+            <p class="verify-error"></p>
+
+            <!-- Resend -->
+            <button type="button" class="resend-btn" disabled>Resend OTP</button>
+
+            <p class="resend-message"></p>
+
+            <!-- Countdown -->
+            <p class="otp-countdown"></p>
+        </form>
+    </div>
+</div>
+
+<%- include('partials/footer') %>
+
+<script>
+    const form = document.querySelector('form')
+    const otpInputs = document.querySelectorAll('.otp-input')
+    const errorMessage = document.querySelector('.verify-error')
+    const resendButton = document.querySelector('.resend-btn')
+    const resendMessage = document.querySelector('.resend-message')
+    const countdownMessage = document.querySelector('.otp-countdown')
+
+    // COUNTDOWN
+    let countdownSeconds = 5 * 60
+    let countdownTimer
+
+    const updateCountdown = () => {
+        const minutes = Math.floor(countdownSeconds / 60)
+        const seconds = countdownSeconds % 60
+
+        countdownMessage.textContent = `You can request a new OTP in ${minutes}:${seconds.toString().padStart(2, '0')}`
+    }
+
+    const startCountdown = () => {
+        clearInterval(countdownTimer)
+        countdownSeconds = 5 * 60
+        resendButton.disabled = true
+        updateCountdown()
+
+        countdownTimer = setInterval(() => {
+            countdownSeconds--
+            updateCountdown()
+
+            if (countdownSeconds <= 0) {
+                clearInterval(countdownTimer)
+                resendButton.disabled = false
+                countdownMessage.textContent = 'Your OTP has expired. You can request a new one.'
+            }
+        }, 1000)
+    }
+
+    // OTP INPUT
+    otpInputs.forEach((input, index) => {
+        input.addEventListener('input', () => {
+            errorMessage.textContent = ''
+            resendMessage.textContent = ''
+
+            // Allow numbers only
+            input.value = input.value.replace(/\D/g, '')
+
+            // Move to next box
+            if (input.value && index < otpInputs.length - 1) {
+                otpInputs[index + 1].focus()
+            }
+        })
+
+        // BACKSPACE
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace') {
+                errorMessage.textContent = ''
+                resendMessage.textContent = ''
+
+                if (!input.value && index > 0) {
+                    otpInputs[index - 1].focus()
+                }
+            }
+        })
+    })
+
+    // EMAIL INPUT
+    form.email.addEventListener('input', () => {
+        errorMessage.textContent = ''
+        resendMessage.textContent = ''
+    })
+
+    // VERIFY EMAIL
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault()
+
+        errorMessage.textContent = ''
+        resendMessage.textContent = ''
+
+        const email = form.email.value.trim()
+
+        // Email validation
+        if (!email) {
+            errorMessage.textContent = 'Please enter your email.'
+            form.email.focus()
+            return
+        }
+
+        if (!form.email.validity.valid) {
+            errorMessage.textContent = 'Please enter a valid email address.'
+            form.email.focus()
+            return
+        }
+
+        // Combine the six OTP boxes
+        let otp = ''
+        otpInputs.forEach((input) => {
+            otp += input.value
+        })
+
+        // OTP validation
+        if (otp.length !== 6) {
+            errorMessage.textContent = 'Please enter the complete 6-digit OTP.'
+            return
+        }
+
+        try {
+            const response = await fetch('/verify-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email,
+                    otp
+                })
+            })
+
+            const data = await response.json()
+
+            if (data.success) {
+                window.location.href = data.redirect
+            } else {
+                errorMessage.textContent = data.message
+            }
+        } catch (error) {
+            console.log(error)
+            errorMessage.textContent = 'Something went wrong. Please try again.'
+        }
+    })
+
+    // RESEND OTP
+    resendButton.addEventListener('click', async () => {
+        errorMessage.textContent = ''
+        resendMessage.textContent = ''
+
+        const email = form.email.value.trim()
+
+        // Email validation
+        if (!email) {
+            resendMessage.textContent = 'Please enter your email first.'
+            form.email.focus()
+            return
+        }
+
+        if (!form.email.validity.valid) {
+            resendMessage.textContent = 'Please enter a valid email address.'
+            form.email.focus()
+            return
+        }
+
+        try {
+            resendButton.disabled = true
+            resendButton.textContent = 'Sending...'
+
+            const response = await fetch('/resend-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email
+                })
+            })
+
+            const data = await response.json()
+
+            if (data.success) {
+                resendMessage.textContent = data.message
+
+                // Clear old OTP
+                otpInputs.forEach((input) => {
+                    input.value = ''
+                })
+
+                otpInputs[0].focus()
+
+                // Start a fresh 5-minute countdown
+                startCountdown()
+            } else {
+                resendMessage.textContent = data.message
+                resendButton.disabled = false
+            }
+        } catch (error) {
+            console.log(error)
+            resendMessage.textContent = 'Something went wrong. Please try again.'
+            resendButton.disabled = false
+        } finally {
+            resendButton.textContent = 'Resend OTP'
+        }
+    })
+    startCountdown()
+</script>
