@@ -54,38 +54,45 @@ const login_get = (req, res)=>{
 
 const signup_post = async (req, res) => {
     const { username, email, password, passwordConfirm } = req.body
+
     try {
 
         // CONFIRM PASSWORD MATCH
         if (password !== passwordConfirm) {
-        return res.status(400).json({ errors: { passwordConfirm: 'Passwords do not match'}})
+            return res.status(400).json({
+                errors: {
+                    passwordConfirm: 'Passwords do not match'
+                }
+            })
         }
 
-        // CREATE THE USER
-        const user = await User.create({ username, email, password })
-
-        // GENERATE A 6-DIGIT OTP FOR THE USER
+        // GENERATE A 6-DIGIT OTP
         const otp = otpGenerator.generate(6, {
             lowerCaseAlphabets: false,
             upperCaseAlphabets: false,
             specialChars: false,
             digits: true
-            })
+        })
 
         // HASH THE OTP
         const hashedOtp = await bcrypt.hash(otp, 10)
 
-        // SAVE THE HASHED OTP AND EXPIRY TIME TO THE USER
-        user.otp = hashedOtp
-        user.otpExpires = new Date(Date.now() + 5 * 60 * 1000)
-        await user.save()
+        // CREATE THE USER
+        const user = await User.create({
+            username,
+            email,
+            password,
+            otp: hashedOtp,
+            otpExpires: new Date(Date.now() + 5 * 60 * 1000)
+        })
 
         // SEND THE OTP TO THE USER'S EMAIL
         await sendEmail(
-             email,
+            email,
             'Heritage Blog App - OTP Verification',
             otp
         )
+
         // SEND SUCCESS RESPONSE
         res.status(201).json({
             success: true,
@@ -99,6 +106,7 @@ const signup_post = async (req, res) => {
         res.status(400).json({ errors })
     }
 }
+
 
 const login_post = async (req, res) => {
     const { email, password } = req.body
