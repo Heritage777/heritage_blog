@@ -102,7 +102,7 @@ const resendOtp = async (req, res) => {
         return res.status(200).json({ success: true, message: 'A new OTP has been sent to your email' })
 
     } catch (error) {
-        console.log(error)
+        console.log('RESEND OTP ERROR:', error)
         return res.status(500).json({ success: false, message: 'Unable to resend OTP' })
     }
 }
