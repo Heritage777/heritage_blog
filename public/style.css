@@ -95,51 +95,144 @@ body {
     animation: pulseGlow 5s infinite alternate ease-in-out;
 }
 
-/* Login Card Container */
+/* LOGIN */
+
+
+/* =========================================
+   AUTHENTICATION PAGE - RESPONSIVE LAYOUT
+========================================= */
+
+.auth-wrapper {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    min-height: calc(100vh - 80px);
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px;
+    gap: 40px;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+/* =========================================
+   LEFT SIDEBAR / BRANDING
+========================================= */
+
+.auth-sidebar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+.brand-content {
+    max-width: 500px;
+    width: 100%;
+}
+
+.brand-content h1 {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1.1;
+    color: #fff;
+    letter-spacing: -2px;
+    margin-bottom: 25px;
+}
+
+.brand-content p {
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+    line-height: 1.8;
+    color: var(--text-muted);
+}
+
+/* =========================================
+   RIGHT SIDE / FORM
+========================================= */
+
+.auth-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Login / Signup Card */
+
 .form-container {
     background: var(--bg-card);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
+
     border: 1px solid var(--border-color);
     border-radius: 24px;
+
     padding: 45px;
     width: 100%;
-    max-width: 440px;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(0, 255, 255, 0.08);
+    max-width: 460px;
+    min-width: 0;
+
+    box-shadow:
+        0 30px 60px rgba(0, 0, 0, 0.9),
+        0 0 35px rgba(0, 255, 255, 0.08);
+
     text-align: center;
     position: relative;
     z-index: 1;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    animation: scaleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
-    a{
-        color: aqua;
-        font-size: 12px;
-        text-decoration: none;
-    }
+    box-sizing: border-box;
+
+    transition:
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+
+    animation: scaleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.form-container a {
+    color: aqua;
+    font-size: 12px;
+    text-decoration: none;
 }
 
 .form-container:hover {
     border-color: var(--border-hover);
-    box-shadow: 0 35px 70px rgba(0, 0, 0, 1), 0 0 50px rgba(0, 255, 255, 0.2);
+
+    box-shadow:
+        0 35px 70px rgba(0, 0, 0, 1),
+        0 0 50px rgba(0, 255, 255, 0.2);
 }
+
+/* =========================================
+   FORM HEADER
+========================================= */
 
 .form-header-icon {
     width: 45px;
     height: 45px;
+
     background: rgba(0, 255, 255, 0.05);
     border: 1px solid var(--border-color);
     border-radius: 50%;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     margin: 0 auto 20px;
+
     color: var(--accent-aqua);
+
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.25);
 }
 
 .form-heading {
-    font-size: 1.8rem;
+    font-size: clamp(1.5rem, 3vw, 1.8rem);
     color: #fff;
     margin-bottom: 5px;
     letter-spacing: -0.5px;
@@ -147,14 +240,19 @@ body {
 
 .form-subheading {
     font-size: 0.85rem;
+    line-height: 1.6;
     color: var(--text-muted);
     margin-bottom: 30px;
 }
 
-/* Form Fields */
+/* =========================================
+   FORM FIELDS
+========================================= */
+
 .form-group {
     text-align: left;
     margin-bottom: 20px;
+    width: 100%;
 }
 
 .form-group label {
@@ -167,31 +265,49 @@ body {
 
 .form-group input,
 .password-wrapper input {
+    display: block;
+
     width: 100%;
+    min-width: 0;
+
     background-color: var(--input-bg);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
-    padding: 13px 14px;
+
+    padding: 14px;
+
     color: #fff;
-    font-size: 0.9rem;
+    font-size: 16px;
+    font-family: inherit;
+
     outline: none;
     box-sizing: border-box;
+
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.password-wrapper input:focus {
     border-color: var(--accent-aqua);
+
     background-color: rgba(0, 255, 255, 0.03);
+
     box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
 }
+
+/* Prevent long error messages from breaking layout */
 
 .error {
     font-size: 0.75rem;
     color: #ff4d4d;
     margin-top: 5px;
+    overflow-wrap: anywhere;
 }
 
-/* Actions & Links */
+/* =========================================
+   FORM LINKS
+========================================= */
+
 .form-actions-inline {
     display: flex;
     justify-content: flex-end;
@@ -210,26 +326,55 @@ body {
     text-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
 }
 
-/* Electric Aqua Submit Button */
+.auth-footer-text {
+    margin-top: 20px;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+}
+
+.auth-footer-text a {
+    color: var(--accent-aqua);
+}
+
+/* =========================================
+   SUBMIT BUTTON
+========================================= */
+
 .btn-submit {
     width: 100%;
+    min-height: 50px;
+
     background: linear-gradient(135deg, #00ffff, #00b3b3);
-    color: #000000;
+    color: #000;
+
     border: none;
     border-radius: 12px;
+
     padding: 14px;
+
     margin: 10px 0;
+
     font-weight: 700;
     font-size: 0.95rem;
+    font-family: inherit;
+
     cursor: pointer;
+
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
+
     position: relative;
     overflow: hidden;
+
     box-shadow: 0 0 25px rgba(0, 255, 255, 0.4);
-    transition: transform 0.2s ease, box-shadow 0.3s ease;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.3s ease,
+        opacity 0.3s ease;
 }
 
 .btn-submit::after {
@@ -237,9 +382,17 @@ body {
     position: absolute;
     top: 0;
     left: -100%;
+
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.6),
+        transparent
+    );
+
     transition: 0.5s;
 }
 
@@ -251,6 +404,214 @@ body {
 .btn-submit:hover::after {
     left: 100%;
 }
+
+/* Loading / disabled button */
+
+.btn-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+}
+
+.btn-submit:disabled::after {
+    display: none;
+}
+
+/* =========================================
+   TABLET - SINGLE COLUMN
+========================================= */
+
+@media (max-width: 900px) {
+
+    .auth-wrapper {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 20px;
+
+        padding: 30px 24px;
+
+        min-height: auto;
+    }
+
+    .auth-sidebar {
+        padding: 20px 10px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .brand-content {
+        max-width: 600px;
+    }
+
+    .brand-content h1 {
+        font-size: clamp(2rem, 6vw, 3rem);
+        letter-spacing: -1px;
+        margin-bottom: 15px;
+    }
+
+    .brand-content p {
+        font-size: 0.95rem;
+        line-height: 1.7;
+    }
+
+    .auth-main {
+        padding: 10px;
+    }
+
+    .form-container {
+        max-width: 520px;
+    }
+}
+
+/* =========================================
+   MOBILE PHONES
+========================================= */
+
+@media (max-width: 600px) {
+
+    .auth-wrapper {
+        display: flex;
+        flex-direction: column;
+
+        width: 100%;
+        min-height: auto;
+
+        padding: 20px 16px 35px;
+        gap: 15px;
+    }
+
+    /* Branding stays above the form */
+
+    .auth-sidebar {
+        display: flex;
+        width: 100%;
+
+        padding: 15px 5px;
+        text-align: center;
+    }
+
+    .brand-content {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .brand-content h1 {
+        font-size: clamp(1.8rem, 8vw, 2.5rem);
+        line-height: 1.15;
+        letter-spacing: -0.8px;
+        margin-bottom: 12px;
+    }
+
+    .brand-content p {
+        font-size: 0.85rem;
+        line-height: 1.6;
+        margin: 0 auto;
+    }
+
+    /* Form occupies the full available width */
+
+    .auth-main {
+        display: block;
+        width: 100%;
+
+        padding: 0;
+        margin: 0;
+    }
+
+    .form-container {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+
+        padding: 28px 22px;
+        border-radius: 20px;
+
+        margin: 0 auto;
+    }
+
+    .form-header-icon {
+        width: 42px;
+        height: 42px;
+        margin-bottom: 16px;
+    }
+
+    .form-heading {
+        font-size: 1.6rem;
+    }
+
+    .form-subheading {
+        font-size: 0.85rem;
+        margin-bottom: 25px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-group input,
+    .password-wrapper input {
+        width: 100%;
+        padding: 14px;
+        font-size: 16px;
+    }
+
+    .form-actions-inline {
+        margin-bottom: 20px;
+    }
+
+    .btn-submit {
+        width: 100%;
+        min-height: 50px;
+        padding: 14px;
+        font-size: 0.95rem;
+    }
+
+    .auth-footer-text {
+        font-size: 0.85rem;
+        margin-top: 18px;
+    }
+}
+
+/* =========================================
+   VERY SMALL PHONES
+========================================= */
+
+@media (max-width: 360px) {
+
+    .auth-wrapper {
+        padding: 16px 10px 25px;
+    }
+
+    .form-container {
+        padding: 24px 16px;
+        border-radius: 16px;
+    }
+
+    .brand-content h1 {
+        font-size: 1.8rem;
+    }
+
+    .brand-content p {
+        font-size: 0.8rem;
+    }
+
+    .form-heading {
+        font-size: 1.45rem;
+    }
+
+    .form-subheading {
+        font-size: 0.8rem;
+    }
+}
+
+
+
+
+
+
+
+
+
 
 /* FOOTER */
 /* ==========================================================
