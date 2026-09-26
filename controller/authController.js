@@ -82,11 +82,10 @@ const signup_post = async (req, res) => {
 
         // SEND THE OTP TO THE USER'S EMAIL
         await sendEmail(
-            email,
+             email,
             'Heritage Blog App - OTP Verification',
-            `Your OTP is ${otp}. It will expire in 5 minutes.`
+            otp
         )
-
         // SEND SUCCESS RESPONSE
         res.status(201).json({
             success: true,

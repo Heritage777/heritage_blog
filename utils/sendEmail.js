@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer')
+const otpEmailTemplate = require('./otpEmailTemplate')
 
-const sendEmail = async (email, title, body)=>{
+const sendEmail = async (email, title, body) => {
     try {
         //we must first create a transporter
         const transporter = nodemailer.createTransport({
@@ -15,18 +16,21 @@ const sendEmail = async (email, title, body)=>{
 
         // to send the mail
         const info = await transporter.sendMail({
-            from: 'Heritage Blog App', //Not authenticate. It is simply what the recipient sees as sender.
+            from: {
+                name: 'Heritage Blog App',
+                address: process.env.MAIL_USER
+            }, //Not authenticate. It is simply what the recipient sees as sender.
             to: `${email}`,
             subject: `${title}`,
-            html: `${body}`
+            html: otpEmailTemplate(body)
         })
+
         return info
+
     } catch (error) {
         console.log('error is:', error)
         throw error
     }
-
 }
 
-
-module.exports = {sendEmail}
+module.exports = { sendEmail }

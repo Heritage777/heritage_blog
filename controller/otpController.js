@@ -96,7 +96,7 @@ const resendOtp = async (req, res) => {
         await sendEmail(
             email,
             'Heritage Blog App - New OTP',
-            `Your new OTP is ${otp}. It will expire in 5 minutes.`
+            otp
         )
 
         return res.status(200).json({ success: true, message: 'A new OTP has been sent to your email' })
@@ -135,8 +135,8 @@ const forgotPassword = async (req, res) => {
 
         await sendEmail(
             email,
-            'Heritage Blog App - Password Reset',
-            `Your password reset OTP is ${otp}. It will expire in 5 minutes.`
+            'Heritage Blog App - New OTP',
+            otp
         )
         return res.status(200).json({
             success: true,
@@ -232,8 +232,8 @@ const resendResetOtp = async (req, res) => {
         await user.save()
         await sendEmail(
             email,
-            'Heritage Blog App - New Password Reset OTP',
-            `Your new password reset OTP is ${otp}. It will expire in 5 minutes.`
+            'Heritage Blog App - New OTP',
+            otp
         )
 
         return res.status(200).json({ success: true, message: 'A new password reset OTP has been sent to your email' })
